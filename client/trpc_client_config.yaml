@@ -1,0 +1,14 @@
+# 全局配置
+global:
+  # 可以在这里定义全局插件等，本次实验暂不使用
+
+# 客户端配置
+client:
+  # 定义要连接的目标服务
+  service:
+    - name: trpc.exp.FileTransfer # 要调用的服务全名，必须与 proto 和服务端配置一致
+      target: 127.0.0.1:8000      # 目标服务器的地址和端口
+      protocol: trpc              # 使用 tRPC 协议
+      network: tcp                # 使用 TCP 网络
+      timeout: 1000               # 默认超时时间 (ms)
+
