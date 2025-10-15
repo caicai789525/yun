@@ -7,7 +7,7 @@ server:
   # 定义服务监听的地址和端口
   service:
     - name: trpc.exp.FileTransfer # 服务的全名，必须与 proto 文件中的 service 定义一致
-      ip: 127.0.0.1               # 监听本地回环地址，表示只接受本机连接
+      ip: 47.115.50.106               # 监听本地回环地址，表示只接受本机连接
       port: 8000                  # 监听 8000 端口
       protocol: trpc              # 使用 tRPC 协议
       network: tcp                # 使用 TCP 网络
