@@ -4,6 +4,8 @@ project(trpc_file_transfer_experiment CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(trpc_DIR "/usr/local/trpc/lib/cmake/trpc")
+
 # 查找tRPC-Cpp框架的依赖
 # 如果tRPC-Cpp已通过 `sudo cmake --install build` 安装，CMake会自动在 /usr/local/trpc 找到它
 find_package(trpc REQUIRED)
