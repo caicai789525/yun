@@ -23,6 +23,8 @@ file(GLOB PROTO_FILES "${CMAKE_CURRENT_SOURCE_DIR}/proto/*.proto")
 set(PROTO_GEN_DIR "${CMAKE_CURRENT_BINARY_DIR}/gen_proto")
 file(MAKE_DIRECTORY ${PROTO_GEN_DIR})
 
+include_directories(${PROTO_GEN_DIR})
+
 add_custom_command(
         OUTPUT "${PROTO_GEN_DIR}/file_transfer.pb.cc"
         "${PROTO_GEN_DIR}/file_transfer.pb.h"

@@ -3,7 +3,8 @@
 #include <vector>
 
 #include "trpc/client/trpc_client.h"
-#include "proto/file_transfer.trpc.pb.h"
+#include "file_transfer.trpc.pb.h"
+#include "file_transfer.pb.h"
 
 int main() {
     // 初始化 tRPC 框架
