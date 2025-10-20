@@ -1,20 +1,15 @@
 syntax = "proto3";
-
 package trpc.exp;
 
-// 文件传输服务
 service FileTransfer {
-    // 客户端流式上传文件
-    rpc UploadFile(stream FileChunk) returns (UploadResponse) {}
+  rpc UploadFile(stream FileChunk) returns (UploadResponse) {}
 }
 
-// 文件块消息
 message FileChunk {
-    bytes data = 1;
+  bytes data = 1;
 }
 
-// 上传响应
 message UploadResponse {
-    bool success = 1;
-    string message = 2;
+  bool success = 1;
+  string message = 2;
 }
