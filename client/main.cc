@@ -1,35 +1,27 @@
 #include <fstream>
 #include <iostream>
-#include <string>
 #include <vector>
 
-#include "trpc/common/trpc_app.h"
-#include "trpc/client/client_context.h"
-
+#include "trpc/client/trpc_client.h"
 #include "proto/file_transfer.trpc.pb.h"
 
-int main(int argc, char** argv) {
-    // ---------------- 初始化 tRPC ----------------
-    auto trpc_app = std::make_shared<trpc::TrpcApp>();
-    if (trpc_app->Initialize(argc, argv) != 0) {
-        std::cerr << "客户端框架初始化失败" << std::endl;
-        return -1;
-    }
+int main() {
+    // 初始化 tRPC 框架
+    trpc::trpc_global_init();
 
-    // ---------------- 创建服务代理 ----------------
-    auto proxy = trpc::MakeRefCounted<trpc::exp::FileTransferServiceProxy>("trpc.exp.FileTransfer");
+    // 创建服务代理
+    auto proxy = trpc::MakeRefCounted<trpc::exp::FileTransferServiceProxy>();
 
-    // ---------------- 创建客户端上下文 ----------------
-    auto context = trpc::CreateClientContext(proxy);
-    context->SetTimeout(10000); // 设置10秒超时
+    // 创建客户端上下文
+    auto context = trpc::MakeClientContext();
 
-    // ---------------- 核心逻辑 ----------------
+    context->SetTimeout(10000); // 10秒超时
+
     trpc::exp::UploadResponse response;
-    auto stream_writer = proxy->UploadFile(context, &response); // ✅ 注意传指针
-
+    auto stream_writer = proxy->UploadFile(context, &response);
     if (!stream_writer) {
         std::cerr << "创建流写入器失败" << std::endl;
-        trpc::Destroy();
+        trpc::trpc_global_destroy();
         return -1;
     }
 
@@ -37,12 +29,12 @@ int main(int argc, char** argv) {
     const std::string filename = "sample.txt";
     std::ifstream file(filename, std::ios::binary);
     if (!file.is_open()) {
-        std::cerr << "错误: 无法打开文件 " << filename << std::endl;
-        trpc::Destroy();
+        std::cerr << "无法打开文件: " << filename << std::endl;
+        trpc::trpc_global_destroy();
         return -1;
     }
 
-    std::cout << "客户端开始发送文件: " << filename << std::endl;
+    std::cout << "开始上传文件: " << filename << std::endl;
 
     const size_t buffer_size = 4096;
     std::vector<char> buffer(buffer_size);
@@ -65,25 +57,20 @@ int main(int argc, char** argv) {
     file.close();
 
     if (!stream_writer->WritesDone()) {
-        std::cerr << "发送 WritesDone 信号失败" << std::endl;
-        trpc::Destroy();
+        std::cerr << "发送 WritesDone 失败" << std::endl;
+        trpc::trpc_global_destroy();
         return -1;
     }
 
-    std::cout << "客户端文件发送完毕" << std::endl;
-
-    // 等待服务端最终响应
+    // 等待服务端响应
     trpc::Status status = stream_writer->Finish();
-
     if (status.OK()) {
-        std::cout << "客户端收到响应: success=" << std::boolalpha << response.success()
+        std::cout << "上传完成, success=" << std::boolalpha << response.success()
                   << ", message=\"" << response.message() << "\"" << std::endl;
     } else {
         std::cerr << "RPC 调用失败: " << status.ErrorMessage() << std::endl;
     }
 
-    // 销毁 tRPC 框架
-    trpc::Destroy();
-
+    trpc::trpc_global_destroy();
     return 0;
 }
