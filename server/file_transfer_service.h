@@ -1,11 +1,13 @@
 #pragma once
-#include "trpc/server/stream_rpc_method_handler.h"
+#include "trpc/server/trpc_server.h"
 #include "file_transfer.trpc.pb.h"
 #include "file_transfer.pb.h"
 
-class FileTransferServiceImpl : public trpc::exp::FileTransfer {
+class FileTransferServiceImpl : public trpc::exp::FileTransferService {
 public:
-    trpc::Status UploadFile(const trpc::ServerContextPtr& context,
-                            trpc::stream::StreamReader<trpc::exp::FileChunk>& stream,
-                            trpc::exp::UploadResponse* response) override;
+    // 重写 UploadFile 流式接口
+    trpc::Status UploadFile(
+            const trpc::ServerContextPtr& context,
+            trpc::stream::StreamReader<trpc::exp::FileChunk>& stream,
+            trpc::exp::UploadResponse* response) override;
 };
