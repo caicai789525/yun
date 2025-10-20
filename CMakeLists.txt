@@ -58,9 +58,9 @@ add_executable(file_transfer_server
 add_dependencies(file_transfer_server generate_proto)
 
 target_link_libraries(file_transfer_server
-        ${TRPC_DIR}/lib/libtrpc_server.a
-        ${TRPC_DIR}/lib/libtrpc_runtime.a
-        ${TRPC_DIR}/lib/libtrpc_common.a
+        ${TRPC_DIR}/lib/libtrpc.a
+        ${TRPC_DIR}/lib/libtrpc.a
+        ${TRPC_DIR}/lib/libtrpc.a
         protobuf::libprotobuf
         pthread
 )
@@ -73,9 +73,9 @@ add_executable(file_transfer_client
 add_dependencies(file_transfer_client generate_proto)
 
 target_link_libraries(file_transfer_client
-        ${TRPC_DIR}/lib/libtrpc_client.a
-        ${TRPC_DIR}/lib/libtrpc_runtime.a
-        ${TRPC_DIR}/lib/libtrpc_common.a
+        ${TRPC_DIR}/lib/libtrpc.a
+        ${TRPC_DIR}/lib/libtrpc.a
+        ${TRPC_DIR}/lib/libtrpc.a
         protobuf::libprotobuf
         pthread
 )
