@@ -1,19 +1,10 @@
 "D:\Program Files (x86)\CLion 2023.3.5\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug "-DCMAKE_MAKE_PROGRAM=D:/Program Files (x86)/CLion 2023.3.5/bin/ninja/win/x64/ninja.exe" -G Ninja -S "E:\save_file\云计算\实验1\cloud experiments 1" -B "E:\save_file\云计算\实验1\cloud experiments 1\cmake-build-debug"
-CMake Error at CMakeLists.txt:11 (find_package):
-  By not providing "Findtrpc.cmake" in CMAKE_MODULE_PATH this project has
-  asked CMake to find a package configuration file provided by "trpc", but
-  CMake did not find one.
-
-  Could not find a package configuration file provided by "trpc" with any of
-  the following names:
-
-    trpcConfig.cmake
-    trpc-config.cmake
-
-  Add the installation prefix of "trpc" to CMAKE_PREFIX_PATH or set
-  "trpc_DIR" to a directory containing one of the above files.  If "trpc"
-  provides a separate development package or SDK, be sure it has been
-  installed.
+CMake Error at D:/Program Files (x86)/CLion 2023.3.5/bin/cmake/win/x64/share/cmake-3.27/Modules/FindPackageHandleStandardArgs.cmake:230 (message):
+  Could NOT find Protobuf (missing: Protobuf_INCLUDE_DIR)
+Call Stack (most recent call first):
+  D:/Program Files (x86)/CLion 2023.3.5/bin/cmake/win/x64/share/cmake-3.27/Modules/FindPackageHandleStandardArgs.cmake:600 (_FPHSA_FAILURE_MESSAGE)
+  D:/Program Files (x86)/CLion 2023.3.5/bin/cmake/win/x64/share/cmake-3.27/Modules/FindProtobuf.cmake:652 (FIND_PACKAGE_HANDLE_STANDARD_ARGS)
+  CMakeLists.txt:15 (find_package)
 
 
 -- Configuring incomplete, errors occurred!
