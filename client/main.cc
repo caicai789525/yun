@@ -10,7 +10,8 @@
 
 int main(int argc, char** argv) {
     // ---------------- 初始化 tRPC ----------------
-    if (!trpc::Init("trpc_client_config.yaml")) {
+    auto trpc_app = std::make_shared<trpc::TrpcApp>();
+    if (trpc_app->Initialize(argc, argv) != 0) {
         std::cerr << "客户端框架初始化失败" << std::endl;
         return -1;
     }

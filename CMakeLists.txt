@@ -8,11 +8,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(TRPC_DIR "/usr/local/trpc-cpp/trpc")
 
 # tRPC 头文件和库路径
-include_directories(${TRPC_DIR}/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 link_directories(${TRPC_DIR}/lib)
-
-# 添加tRPC-Cpp的CMake模块路径
-list(APPEND CMAKE_PREFIX_PATH ${TRPC_INSTALL_DIR})
 
 # 查找 Protobuf
 find_package(Protobuf REQUIRED)
