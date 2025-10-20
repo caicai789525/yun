@@ -4,72 +4,78 @@ project(trpc_file_transfer_experiment CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(trpc_DIR "/usr/local/trpc/lib/cmake/trpc")
+# tRPC 安装路径
+set(TRPC_DIR "/usr/local/trpc-cpp/trpc-2024-07")
 
-# 查找tRPC-Cpp框架的依赖
-# 如果tRPC-Cpp已通过 `sudo cmake --install build` 安装，CMake会自动在 /usr/local/trpc 找到它
-find_package(trpc REQUIRED)
+# tRPC 头文件和库路径
+include_directories(${TRPC_DIR}/include)
+link_directories(${TRPC_DIR}/lib)
+
+# 查找 Protobuf
 find_package(Protobuf REQUIRED)
 
 # ----------------- Protobuf 代码生成 -----------------
-# 获取 .proto 文件
 file(GLOB PROTO_FILES "${CMAKE_CURRENT_SOURCE_DIR}/proto/*.proto")
 
-# 设置生成代码的输出目录
 set(PROTO_GEN_DIR "${CMAKE_CURRENT_BINARY_DIR}/gen_proto")
 file(MAKE_DIRECTORY ${PROTO_GEN_DIR})
 
-# 添加一个自定义构建目标，用于从 .proto 文件生成 C++ 代码
 add_custom_command(
-  OUTPUT "${PROTO_GEN_DIR}/proto/file_transfer.pb.cc"
-         "${PROTO_GEN_DIR}/proto/file_transfer.pb.h"
-         "${PROTO_GEN_DIR}/proto/file_transfer.trpc.pb.cc"
-         "${PROTO_GEN_DIR}/proto/file_transfer.trpc.pb.h"
-  COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
-          --proto_path=${CMAKE_CURRENT_SOURCE_DIR}
-          --cpp_out=${PROTO_GEN_DIR}
-          --trpc_out=${PROTO_GEN_DIR}
-          ${PROTO_FILES}
-  DEPENDS ${PROTO_FILES}
-  COMMENT "从 .proto 文件生成 C++ 源代码"
+        OUTPUT "${PROTO_GEN_DIR}/proto/file_transfer.pb.cc"
+        "${PROTO_GEN_DIR}/proto/file_transfer.pb.h"
+        "${PROTO_GEN_DIR}/proto/file_transfer.trpc.pb.cc"
+        "${PROTO_GEN_DIR}/proto/file_transfer.trpc.pb.h"
+        COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
+        --proto_path=${CMAKE_CURRENT_SOURCE_DIR}
+        --cpp_out=${PROTO_GEN_DIR}
+        --trpc_out=${PROTO_GEN_DIR}
+        ${PROTO_FILES}
+        DEPENDS ${PROTO_FILES}
+        COMMENT "从 .proto 文件生成 C++ 源代码"
 )
 
-# 创建一个自定义目标来触发代码生成
 add_custom_target(generate_proto ALL
-  DEPENDS "${PROTO_GEN_DIR}/proto/file_transfer.pb.cc"
-          "${PROTO_GEN_DIR}/proto/file_transfer.pb.h"
-          "${PROTO_GEN_DIR}/proto/file_transfer.trpc.pb.cc"
-          "${PROTO_GEN_DIR}/proto/file_transfer.trpc.pb.h"
+        DEPENDS "${PROTO_GEN_DIR}/proto/file_transfer.pb.cc"
+        "${PROTO_GEN_DIR}/proto/file_transfer.pb.h"
+        "${PROTO_GEN_DIR}/proto/file_transfer.trpc.pb.cc"
+        "${PROTO_GEN_DIR}/proto/file_transfer.trpc.pb.h"
 )
 
-# 包含生成的头文件目录
 include_directories(${PROTO_GEN_DIR})
 
-# ----------------- 服务端可执行文件 -----------------
+# ----------------- 服务端 -----------------
 add_executable(file_transfer_server
-  server/main.cc
-  server/file_transfer_service.cc
-  server/file_transfer_service.h
+        server/main.cc
+        server/file_transfer_service.cc
+        server/file_transfer_service.h
 )
 add_dependencies(file_transfer_server generate_proto)
-target_link_libraries(file_transfer_server PRIVATE trpc::trpc_server ${PROTOBUF_LIBRARIES})
+target_link_libraries(file_transfer_server
+        ${TRPC_DIR}/lib/libtrpc_server.a
+        ${TRPC_DIR}/lib/libtrpc_runtime.a
+        ${TRPC_DIR}/lib/libtrpc_common.a
+        protobuf
+        pthread
+)
 
-# ----------------- 客户端可执行文件 -----------------
+# ----------------- 客户端 -----------------
 add_executable(file_transfer_client
-  client/main.cc
+        client/main.cc
 )
 add_dependencies(file_transfer_client generate_proto)
-target_link_libraries(file_transfer_client PRIVATE trpc::trpc_client ${PROTOBUF_LIBRARIES})
-
-# ----------------- 安装 -----------------
-# 指定安装目标
-install(TARGETS file_transfer_server file_transfer_client RUNTIME DESTINATION bin)
-# 安装配置文件和示例文本
-install(FILES
-    server/trpc_server_config.yaml
-    client/trpc_client_config.yaml
-    sample.txt
-    DESTINATION bin
+target_link_libraries(file_transfer_client
+        ${TRPC_DIR}/lib/libtrpc_client.a
+        ${TRPC_DIR}/lib/libtrpc_runtime.a
+        ${TRPC_DIR}/lib/libtrpc_common.a
+        protobuf
+        pthread
 )
 
-
+# ----------------- 安装 -----------------
+install(TARGETS file_transfer_server file_transfer_client RUNTIME DESTINATION bin)
+install(FILES
+        server/trpc_server_config.yaml
+        client/trpc_client_config.yaml
+        sample.txt
+        DESTINATION bin
+)
