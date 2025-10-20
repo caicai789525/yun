@@ -1,6 +1,7 @@
 #pragma once
 #include "trpc/server/stream_rpc_method_handler.h"
-#include "proto/file_transfer.trpc.pb.h"
+#include "file_transfer.trpc.pb.h"
+#include "file_transfer.pb.h"
 
 class FileTransferServiceImpl : public trpc::exp::FileTransfer {
 public:
