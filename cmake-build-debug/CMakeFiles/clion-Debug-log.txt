@@ -4,7 +4,7 @@ CMake Error at D:/Program Files (x86)/CLion 2023.3.5/bin/cmake/win/x64/share/cma
 Call Stack (most recent call first):
   D:/Program Files (x86)/CLion 2023.3.5/bin/cmake/win/x64/share/cmake-3.27/Modules/FindPackageHandleStandardArgs.cmake:600 (_FPHSA_FAILURE_MESSAGE)
   D:/Program Files (x86)/CLion 2023.3.5/bin/cmake/win/x64/share/cmake-3.27/Modules/FindProtobuf.cmake:652 (FIND_PACKAGE_HANDLE_STANDARD_ARGS)
-  CMakeLists.txt:15 (find_package)
+  CMakeLists.txt:11 (find_package)
 
 
 -- Configuring incomplete, errors occurred!
