@@ -26,7 +26,8 @@ file(MAKE_DIRECTORY ${PROTO_GEN_DIR})
 include_directories(${PROTO_GEN_DIR})
 
 add_custom_command(
-        OUTPUT "${PROTO_GEN_DIR}/file_transfer.pb.cc"
+        OUTPUT
+        "${PROTO_GEN_DIR}/file_transfer.pb.cc"
         "${PROTO_GEN_DIR}/file_transfer.pb.h"
         "${PROTO_GEN_DIR}/file_transfer.trpc.pb.cc"
         "${PROTO_GEN_DIR}/file_transfer.trpc.pb.h"
@@ -40,13 +41,12 @@ add_custom_command(
 )
 
 add_custom_target(generate_proto ALL
-        DEPENDS "${PROTO_GEN_DIR}/file_transfer.pb.cc"
+        DEPENDS
+        "${PROTO_GEN_DIR}/file_transfer.pb.cc"
         "${PROTO_GEN_DIR}/file_transfer.pb.h"
         "${PROTO_GEN_DIR}/file_transfer.trpc.pb.cc"
         "${PROTO_GEN_DIR}/file_transfer.trpc.pb.h"
 )
-
-include_directories(${PROTO_GEN_DIR})
 
 # ----------------- 服务端 -----------------
 include_directories(server)
@@ -61,8 +61,6 @@ add_dependencies(file_transfer_server generate_proto)
 
 target_link_libraries(file_transfer_server
         ${TRPC_DIR}/lib/libtrpc.a
-        ${TRPC_DIR}/lib/libtrpc.a
-        ${TRPC_DIR}/lib/libtrpc.a
         protobuf::libprotobuf
         pthread
 )
@@ -75,8 +73,6 @@ add_executable(file_transfer_client
 add_dependencies(file_transfer_client generate_proto)
 
 target_link_libraries(file_transfer_client
-        ${TRPC_DIR}/lib/libtrpc.a
-        ${TRPC_DIR}/lib/libtrpc.a
         ${TRPC_DIR}/lib/libtrpc.a
         protobuf::libprotobuf
         pthread
