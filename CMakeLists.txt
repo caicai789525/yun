@@ -34,6 +34,7 @@ add_custom_command(
         COMMAND ${Protobuf_PROTOC_EXECUTABLE}
         --proto_path=${CMAKE_CURRENT_SOURCE_DIR}/proto
         --cpp_out=${PROTO_GEN_DIR}
+        --plugin=protoc-gen-trpc=$ENV{HOME}/trpc-cpp/build/bin/trpc_cpp_plugin
         --trpc_out=${PROTO_GEN_DIR}
         ${PROTO_FILES}
         DEPENDS ${PROTO_FILES}
